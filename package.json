@@ -1,0 +1,70 @@
+{
+  "name": "electron-hang-demo",
+  "displayName": "Electron hang demo",
+  "version": "0.0.1",
+  "description": "To help reproduce https://github.com/microsoft/playwright/issues/27523",
+  "main": "dist/main.js",
+  "author": "Planet's Lightning Arrester",
+  "homepage": "https://github.com/planetsLightningArrester/electron-hang-demo#readme",
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "GNU GPLv3",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/planetsLightningArrester/electron-hang-demo.git"
+  },
+  "scripts": {
+    "clean": "rimraf dist node_modules playwright-report test-results",
+    "compile": "rimraf dist && tsc -b && npm run copy-assets && npm run copy-client",
+    "start": "run-script-os",
+    "start:default": "NODE_ENV=development nodemon -L",
+    "start:win32": "set NODE_ENV=development && nodemon -L",
+    "copy-assets": "run-script-os",
+    "copy-assets:default": "cp -rf src/images dist",
+    "copy-assets:win32": "xcopy src\\images dist\\images /e /i /h /y",
+    "copy-client": "run-script-os",
+    "copy-client:default": "cp -rf src/client dist/client && cp -rf src/images dist",
+    "copy-client:win32": "xcopy src\\client dist\\client /e /i /h /y && xcopy src\\images dist\\images /e /i /h /y",
+    "lint": "run-script-os",
+    "lint:default": "npx electronegativity -e 28.1.3 -r -i src -x PreloadJsCheck | tee /dev/tty | grep -q \"No issues were found\" && eslint --ext .js,.ts src",
+    "lint:win32": "npx electronegativity -e 28.1.3 -r -i src -x PreloadJsCheck | findstr /R /C:\"No issues were found\" && eslint --ext .js,.ts src",
+    "pretest": "npm run compile",
+    "test": "run-script-os",
+    "test:default": "NODE_ENV=testing playwright test --reporter line",
+    "test:linux": "NODE_ENV=testing xvfb-run -s \"-screen 0, 1024x768x24x24\" playwright test --reporter line",
+    "test:win32": "set NODE_ENV=testing && playwright test --reporter line",
+    "package": "npm run compile && npm run lint && electron-forge package",
+    "make": "npm run compile && npm run lint && electron-forge make"
+  },
+  "devDependencies": {
+    "@doyensec/electronegativity": "^1.10.3",
+    "@electron-forge/cli": "^7.2.0",
+    "@electron-forge/maker-zip": "^7.2.0",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.2.0",
+    "@eslint/create-config": "^0.4.6",
+    "@playwright/test": "^1.41.2",
+    "@types/node": "^20.11.4",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "electron": "^28.2.1",
+    "eslint": "^8.56.0",
+    "eslint-config-standard-with-typescript": "^43.0.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-n": "^16.6.2",
+    "eslint-plugin-promise": "^6.1.1",
+    "nodemon": "^3.0.3",
+    "rimraf": "^5.0.5",
+    "run-script-os": "^1.1.6",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "parser-de-notas-de-corretagem": "^0.10.15",
+    "printaeu": "^0.1.12"
+  },
+  "lint-staged": {
+    "*.{ts,js}": [
+      "npx eslint --fix"
+    ]
+  }
+}

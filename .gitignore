@@ -1,0 +1,16 @@
+out
+node_modules
+dist
+*.csv
+!src/tests/notes/**/*
+
+*.png
+!**/src/**/*.png
+!art/**/*.png
+!src/client/**/*.png
+
+# Playwright
+**/test-results/**
+**/playwright-report/**
+**/playwright/.cache/
+
